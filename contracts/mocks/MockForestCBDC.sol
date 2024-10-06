@@ -6,38 +6,15 @@ import "../abstracts/extensions/FreezeAddress.sol";
 import "../abstracts/extensions/FreezeBalance.sol";
 import "../abstracts/extensions/FreezeToken.sol";
 
-contract MockForestCBDC is
-    ForestToken,
-    FreezeAddress,
-    FreezeBalance,
-    FreezeToken
-{
+contract MockForestCBDC is ForestToken, FreezeAddress, FreezeBalance, FreezeToken {
     /// @custom:event for keep tracking token from root.
-    event Transfer(
-        address from,
-        address to,
-        bytes32 indexed root,
-        bytes32 indexed parent,
-        uint256 value
-    );
+    event Transfer(address from, address to, bytes32 indexed root, bytes32 indexed parent, uint256 value);
 
-    constructor(
-        string memory name_,
-        string memory symbol_
-    ) ForestToken(name_, symbol_) {}
-
-    modifier checkFrozenAddress(address from, address to) {
-        if (isFrozen(from) || isFrozen(to)) {
-            revert AddressFrozen();
-        }
-        _;
-    }
+    constructor(string memory name_, string memory symbol_) ForestToken(name_, symbol_) {}
 
     modifier checkFrozenRootOrParent(address account, bytes32 tokenId) {
         Forest.Transaction memory transaction = _transaction(account, tokenId);
-        if (
-            isTokenFrozen(transaction.root) || isTokenFrozen(transaction.parent)
-        ) {
+        if (isTokenFrozen(transaction.root) || isTokenFrozen(transaction.parent)) {
             revert TokenFrozen();
         }
         _;
@@ -65,5 +42,9 @@ contract MockForestCBDC is
 
     function mint(address account, uint256 value) public {
         _mintTransaction(account, value);
+    }
+
+    function burn(address account, bytes32 tokenId, uint256 value) public {
+        _burnTransaction(account, tokenId, value);
     }
 }

@@ -21,10 +21,7 @@ abstract contract ForestToken is ERC20, IForestERC20 {
      * @param name_ The name of the token.
      * @param symbol_ The symbol of the token.
      */
-    constructor(
-        string memory name_,
-        string memory symbol_
-    ) ERC20(name_, symbol_) {}
+    constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {}
 
     /**
      * @dev Retrieves the details of a transaction.
@@ -32,10 +29,7 @@ abstract contract ForestToken is ERC20, IForestERC20 {
      * @param tokenId The identifier of the transaction.
      * @return The transaction details.
      */
-    function _transaction(
-        address account,
-        bytes32 tokenId
-    ) internal view returns (Forest.Transaction memory) {
+    function _transaction(address account, bytes32 tokenId) internal view returns (Forest.Transaction memory) {
         return _trees.transaction(account, tokenId);
     }
 
@@ -46,22 +40,14 @@ abstract contract ForestToken is ERC20, IForestERC20 {
      * @param tokenId The identifier of the transaction.
      * @param value The amount of tokens to transfer.
      */
-    function _transfer(
-        address from,
-        address to,
-        bytes32 tokenId,
-        uint256 value
-    ) internal virtual {
+    function _transfer(address from, address to, bytes32 tokenId, uint256 value) internal virtual {
         Forest.Transaction memory txn = _trees.transaction(from, tokenId);
         _trees.spendTransaction(Forest.TransactionInput(tokenId, value), from);
         _trees.createTransaction(
             Forest.TransactionOutput(value, to),
             txn.root,
             tokenId,
-            Forest.calculateTransactionHash(
-                from,
-                _trees.transactionCount(from)
-            ),
+            Forest.calculateTransactionHash(from, _trees.transactionCount(from)),
             from
         );
         if ((txn.value - value) == 0) {
@@ -80,10 +66,7 @@ abstract contract ForestToken is ERC20, IForestERC20 {
             Forest.TransactionOutput(value, account),
             Forest.calculateTranscationRootHash(),
             bytes32(0),
-            Forest.calculateTransactionHash(
-                address(0),
-                _trees.transactionCount(address(0))
-            ),
+            Forest.calculateTransactionHash(address(0), _trees.transactionCount(address(0))),
             address(0)
         );
         _mint(account, value);
@@ -95,18 +78,11 @@ abstract contract ForestToken is ERC20, IForestERC20 {
      * @param tokenId The identifier of the transaction.
      * @param value The amount of tokens to burn.
      */
-    function _burnTransaction(
-        address account,
-        bytes32 tokenId,
-        uint256 value
-    ) internal {
+    function _burnTransaction(address account, bytes32 tokenId, uint256 value) internal {
         if (value == _trees.transactionValue(account, tokenId)) {
             _trees.consumeTransaction(tokenId, account);
         } else {
-            _trees.spendTransaction(
-                Forest.TransactionInput(tokenId, value),
-                account
-            );
+            _trees.spendTransaction(Forest.TransactionInput(tokenId, value), account);
         }
         _burn(account, value);
     }
@@ -117,21 +93,14 @@ abstract contract ForestToken is ERC20, IForestERC20 {
      * @param value The amount of tokens to transfer.
      * @return Always reverts with ERC20TransferNotSupported error.
      */
-    function transfer(
-        address to,
-        uint256 value
-    ) public virtual override returns (bool) {
+    function transfer(address to, uint256 value) public virtual override returns (bool) {
         revert ERC20TransferNotSupported();
     }
 
     /**
      * @inheritdoc IForestERC20
      */
-    function transfer(
-        address to,
-        bytes32 tokenId,
-        uint256 value
-    ) public virtual override returns (bool) {
+    function transfer(address to, bytes32 tokenId, uint256 value) public virtual override returns (bool) {
         _transfer(msg.sender, to, tokenId, value);
         return true;
     }
@@ -143,11 +112,7 @@ abstract contract ForestToken is ERC20, IForestERC20 {
      * @param value The amount of tokens to transfer.
      * @return Always reverts with ERC20TransferFromNotSupported error.
      */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 value
-    ) public virtual override returns (bool) {
+    function transferFrom(address from, address to, uint256 value) public virtual override returns (bool) {
         revert ERC20TransferFromNotSupported();
     }
 

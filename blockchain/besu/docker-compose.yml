@@ -5,27 +5,27 @@ x-besu: &besu
 
 services:
   besu-validator:
-    << : *besu
+    <<: *besu
     hostname: validator
     volumes:
       - "./config/genesis.json:/config/genesis.json:ro"
       - "./config/conf.validator.toml:/config/conf.toml:ro"
       - "./keystore/key:/config/keystore/key"
       - "./data/validator:/data"
-    command:  
+    command:
       - "--config-file=/config/conf.toml"
       - "--node-private-key-file=/config/keystore/key"
       - "--miner-enabled=true"
       - "--miner-coinbase=0xEDFAA84E3E8d6d23Fa0b5A2b66D988f9557362A5"
 
   besu-node-1:
-    << : *besu
+    <<: *besu
     hostname: node-1
     volumes:
       - "./config/genesis.json:/config/genesis.json:ro"
       - "./config/conf.rpc.toml:/config/conf.toml:ro"
       - "./data/node:/data"
-    command: 
+    command:
       - "--config-file=/config/conf.toml"
       - "--Xdns-enabled=true"
       - "--Xdns-update-enabled=true"

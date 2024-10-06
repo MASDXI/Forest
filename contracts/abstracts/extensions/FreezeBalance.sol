@@ -34,11 +34,7 @@ abstract contract FreezeBalance {
      * @param balance The total balance of the account.
      * @param value The amount of balance to be spent.
      */
-    modifier checkFrozenBalance(
-        address account,
-        uint256 balance,
-        uint256 value
-    ) {
+    modifier checkFrozenBalance(address account, uint256 balance, uint256 value) {
         if (balance < value) {
             revert BalanceOverflow();
         }

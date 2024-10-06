@@ -5,7 +5,7 @@ x-geth: &geth
 
 services:
   geth-validator:
-    << : *geth
+    <<: *geth
     hostname: validator
     volumes:
       - "./config/genesis.json:/config/genesis.json:ro"
@@ -16,7 +16,7 @@ services:
       - "./scripts/init.sh:/scripts/init.sh"
       - "./data/validator:/data/"
     entrypoint: /scripts/init.sh
-    command: 
+    command:
       - "--config=/config/conf.toml"
       - "--datadir=/data/"
       - "--networkid=8080"

@@ -8,7 +8,7 @@ pragma solidity >=0.8.0 <0.9.0;
  */
 abstract contract FreezeAddress {
     mapping(address => bool) private _frozen;
-    
+
     /**
      * @notice Error thrown when an operation is attempted on a frozen address.
      */
@@ -25,6 +25,13 @@ abstract contract FreezeAddress {
      * @param auth The boolean status indicating if the address is frozen (true) or unfrozen (false).
      */
     event FrozeAddress(address indexed account, bool indexed auth);
+
+    modifier checkFrozenAddress(address from, address to) {
+        if (isFrozen(from) || isFrozen(to)) {
+            revert AddressFrozen();
+        }
+        _;
+    }
 
     /**
      * @notice Internal function to update the frozen status of an address.

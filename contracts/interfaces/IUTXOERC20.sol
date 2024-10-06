@@ -21,10 +21,7 @@ interface IUTXOERC20 {
      * @param transactionValue The value of the transaction.
      * @param spendingValue The amount being spent.
      */
-    error UTXOERC20TransferOverTransactionValue(
-        uint256 transactionValue,
-        uint256 spendingValue
-    );
+    error UTXOERC20TransferOverTransactionValue(uint256 transactionValue, uint256 spendingValue);
 
     /**
      * @notice Transfers tokens using the UTXO model.
@@ -34,12 +31,7 @@ interface IUTXOERC20 {
      * @param signature The signature associated with the transaction.
      * @return true if the transfer is successful, otherwise false.
      */
-    function transfer(
-        address to,
-        bytes32 tokenId,
-        uint256 value,
-        bytes memory signature
-    ) external returns (bool);
+    function transfer(address to, bytes32 tokenId, uint256 value, bytes memory signature) external returns (bool);
 
     /**
      * @notice Transfers tokens from one address to another using the UTXO model.

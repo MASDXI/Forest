@@ -6,17 +6,7 @@ import "../abstracts/extensions/FreezeAddress.sol";
 import "../abstracts/extensions/FreezeBalance.sol";
 
 contract MockERC20CBDC is ERC20, FreezeAddress, FreezeBalance {
-    constructor(
-        string memory name_,
-        string memory symbol_
-    ) ERC20(name_, symbol_) {}
-
-    modifier checkFrozenAddress(address from, address to) {
-        if (isFrozen(from) || isFrozen(to)) {
-            revert AddressFrozen();
-        }
-        _;
-    }
+    constructor(string memory name_, string memory symbol_) ERC20(name_, symbol_) {}
 
     function transfer(
         address to,
@@ -35,13 +25,7 @@ contract MockERC20CBDC is ERC20, FreezeAddress, FreezeBalance {
         address from,
         address to,
         uint256 value
-    )
-        public
-        override
-        checkFrozenBalance(msg.sender, balanceOf(msg.sender), value)
-        checkFrozenAddress(msg.sender, to)
-        returns (bool)
-    {
+    ) public override checkFrozenBalance(from, balanceOf(from), value) checkFrozenAddress(from, to) returns (bool) {
         return super.transferFrom(from, to, value);
     }
 

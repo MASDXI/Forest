@@ -4,22 +4,22 @@
   "main": "index.js",
   "repository": "https://github.com/MASDXI/Forest.git",
   "license": "Apache-2.0",
+  "private": "true",
   "scripts": {
-    "besu:start": "cd $(pwd)/test/simulators/besu && $(pwd)/scripts/start.sh",
-    "besu:stop": "cd $(pwd)/test/simulators/besu && $(pwd)/scripts/stop.sh",
+    "besu:start": "cd $(pwd)/blockchain/besu && $(pwd)/scripts/start.sh",
+    "besu:stop": "cd $(pwd)/blockchain/besu && $(pwd)/scripts/stop.sh",
     "build": "npx hardhat clean && npx hardhat test && npx hardhat compile",
     "clean": "npx hardhat clean",
     "compile": "npx hardhat compile",
     "coverage": "npx hardhat coverage",
-    "geth:start": "cd $(pwd)/test/simulators/geth && $(pwd)/scripts/start.sh",
-    "geth:stop": "cd $(pwd)/test/simulators/geth && $(pwd)/scripts/stop.sh",
+    "geth:start": "cd $(pwd)/blockchain/geth && $(pwd)/scripts/start.sh",
+    "geth:stop": "cd $(pwd)/blockchain/geth && $(pwd)/scripts/stop.sh",
     "node:start": "npx hardhat node",
     "simulation": "echo \"Not implemented yet.\"",
     "test": "npx hardhat clean && npx hardhat test",
-    "install:requirements": "pip install -r requirements.txt"
-  },
-  "dependencies": {
-    "hardhat": "^2.22.8"
+    "test:parallel": "npx hardhat clean && npx hardhat test --parallel",
+    "install:requirements": "pip install -r requirements.txt",
+    "format": "npx prettier --write ."
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
@@ -33,9 +33,14 @@
     "@typechain/ethers-v6": "^0.5.0",
     "@typechain/hardhat": "^9.0.0",
     "chai": "^4.2.0",
+    "eslint": "^9.12.0",
     "ethers": "^6.4.0",
+    "hardhat": "^2.22.8",
     "hardhat-gas-reporter": "^2.2.1",
     "hardhat-ignore-warnings": "^0.2.11",
+    "lint": "^0.8.19",
+    "prettier": "^3.3.3",
+    "prettier-plugin-solidity": "^1.4.1",
     "solidity-coverage": "^0.8.0",
     "typechain": "^8.3.0"
   }

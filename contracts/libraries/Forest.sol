@@ -48,12 +48,7 @@ library Forest {
      * @param creator The address that created the transaction.
      * @param owner The address that owns the transaction.
      */
-    event TransactionCreated(
-        bytes32 indexed id,
-        bytes32 indexed root,
-        address indexed creator,
-        address owner
-    );
+    event TransactionCreated(bytes32 indexed id, bytes32 indexed root, address indexed creator, address owner);
 
     /**
      * @dev Event emitted when a transaction is consumed (set to zero value) within the forest.
@@ -67,11 +62,7 @@ library Forest {
      * @param spender The address that spent the transaction output.
      * @param value The value spent.
      */
-    event TransactionSpent(
-        bytes32 indexed id,
-        address indexed spender,
-        uint256 value
-    );
+    event TransactionSpent(bytes32 indexed id, address indexed spender, uint256 value);
 
     /**
      * @dev Error thrown when attempting to create an existing transaction.
@@ -102,11 +93,7 @@ library Forest {
      * @param id The identifier of the transaction.
      * @return true if the transaction exists, false otherwise.
      */
-    function _transactionExist(
-        Tree storage self,
-        address account,
-        bytes32 id
-    ) private view returns (bool) {
+    function _transactionExist(Tree storage self, address account, bytes32 id) private view returns (bool) {
         return self.trees[account][id].root != bytes32(0);
     }
 
@@ -115,8 +102,7 @@ library Forest {
      * @return The calculated root hash.
      */
     function calculateTranscationRootHash() internal view returns (bytes32) {
-        return
-            keccak256(abi.encode(block.chainid, block.number, block.timestamp));
+        return keccak256(abi.encode(block.chainid, block.number, block.timestamp));
     }
 
     /**
@@ -125,10 +111,7 @@ library Forest {
      * @param nonce The nonce (transaction count) for the creator.
      * @return The calculated transaction hash.
      */
-    function calculateTransactionHash(
-        address creator,
-        uint256 nonce
-    ) internal view returns (bytes32) {
+    function calculateTransactionHash(address creator, uint256 nonce) internal view returns (bytes32) {
         return keccak256(abi.encode(block.chainid, creator, nonce));
     }
 
@@ -139,11 +122,7 @@ library Forest {
      * @param id The identifier of the transaction.
      * @return The transaction details.
      */
-    function transaction(
-        Tree storage self,
-        address account,
-        bytes32 id
-    ) internal view returns (Transaction memory) {
+    function transaction(Tree storage self, address account, bytes32 id) internal view returns (Transaction memory) {
         return self.trees[account][id];
     }
 
@@ -154,11 +133,7 @@ library Forest {
      * @param id The identifier of the transaction.
      * @return The root hash of the transaction.
      */
-    function transactionRoot(
-        Tree storage self,
-        address account,
-        bytes32 id
-    ) internal view returns (bytes32) {
+    function transactionRoot(Tree storage self, address account, bytes32 id) internal view returns (bytes32) {
         return self.trees[account][id].root;
     }
 
@@ -169,11 +144,7 @@ library Forest {
      * @param id The identifier of the transaction.
      * @return The value associated with the transaction.
      */
-    function transactionValue(
-        Tree storage self,
-        address account,
-        bytes32 id
-    ) internal view returns (uint256) {
+    function transactionValue(Tree storage self, address account, bytes32 id) internal view returns (uint256) {
         return self.trees[account][id].value;
     }
 
@@ -200,11 +171,7 @@ library Forest {
         if (_transactionExist(self, txOutput.account, id)) {
             revert TransactionExist();
         }
-        self.trees[txOutput.account][id] = Transaction(
-            root,
-            parent,
-            txOutput.value
-        );
+        self.trees[txOutput.account][id] = Transaction(root, parent, txOutput.value);
         self.nonces[creator]++;
         self.size[txOutput.account]++;
 
@@ -217,11 +184,7 @@ library Forest {
      * @param txInput The transaction input specifying the output being spent and its value.
      * @param account The address of the account spending the transaction.
      */
-    function spendTransaction(
-        Tree storage self,
-        TransactionInput memory txInput,
-        address account
-    ) internal {
+    function spendTransaction(Tree storage self, TransactionInput memory txInput, address account) internal {
         if (!_transactionExist(self, account, txInput.outpoint)) {
             revert TransactionNotExist();
         }
@@ -241,11 +204,7 @@ library Forest {
      * @param id The identifier of the transaction being consumed.
      * @param account The address of the account owning the transaction.
      */
-    function consumeTransaction(
-        Tree storage self,
-        bytes32 id,
-        address account
-    ) internal {
+    function consumeTransaction(Tree storage self, bytes32 id, address account) internal {
         if (!_transactionExist(self, account, id)) {
             revert TransactionNotExist();
         }
@@ -261,10 +220,7 @@ library Forest {
      * @param account The address of the account.
      * @return The number of transactions (nonce) for the account.
      */
-    function transactionCount(
-        Tree storage self,
-        address account
-    ) internal view returns (uint256) {
+    function transactionCount(Tree storage self, address account) internal view returns (uint256) {
         return self.nonces[account];
     }
 
@@ -274,10 +230,7 @@ library Forest {
      * @param account The address of the account.
      * @return The size (number of transactions) for the account.
      */
-    function size(
-        Tree storage self,
-        address account
-    ) internal view returns (uint256) {
+    function transactionSize(Tree storage self, address account) internal view returns (uint256) {
         return self.size[account];
     }
 }

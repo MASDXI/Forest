@@ -58,7 +58,7 @@ abstract contract FreezeToken {
         }
         _updateSuspendToken(tokenId, true);
     }
-    
+
     /**
      * @notice Public function to unfreeze a token.
      * @param tokenId The identifier of the token to be unfrozen.

@@ -55,11 +55,7 @@ library ExtendedUnspentTransactionOutput {
      * @param creator The creator of the transaction.
      * @param owner The owner of the transaction output.
      */
-    event TransactionCreated(
-        bytes32 indexed id,
-        address indexed creator,
-        address indexed owner
-    );
+    event TransactionCreated(bytes32 indexed id, address indexed creator, address indexed owner);
 
     /**
      * @notice Event emitted when a transaction is consumed.
@@ -105,10 +101,7 @@ library ExtendedUnspentTransactionOutput {
      * @param id The identifier of the transaction.
      * @return true if the transaction exists, false otherwise.
      */
-    function _transactionExist(
-        eUTXO storage self,
-        bytes32 id
-    ) private view returns (bool) {
+    function _transactionExist(eUTXO storage self, bytes32 id) private view returns (bool) {
         return self.transactions[id].value > 0;
     }
 
@@ -118,10 +111,7 @@ library ExtendedUnspentTransactionOutput {
      * @param nonce The nonce associated with the creator.
      * @return The calculated transaction hash.
      */
-    function calculateTransactionHash(
-        address creator,
-        uint256 nonce
-    ) internal view returns (bytes32) {
+    function calculateTransactionHash(address creator, uint256 nonce) internal view returns (bytes32) {
         return keccak256(abi.encode(block.chainid, creator, nonce));
     }
 
@@ -148,13 +138,7 @@ library ExtendedUnspentTransactionOutput {
         if (_transactionExist(self, id)) {
             revert TransactionExist();
         }
-        self.transactions[id] = Transaction(
-            input,
-            txOutput.value,
-            data,
-            txOutput.account,
-            false
-        );
+        self.transactions[id] = Transaction(input, txOutput.value, data, txOutput.account, false);
         self.nonces[creator]++;
         self.size[txOutput.account]++;
 
@@ -167,11 +151,7 @@ library ExtendedUnspentTransactionOutput {
      * @param txInput The transaction input details.
      * @param account The account spending the transaction.
      */
-    function spendTransaction(
-        eUTXO storage self,
-        TransactionInput memory txInput,
-        address account
-    ) internal {
+    function spendTransaction(eUTXO storage self, TransactionInput memory txInput, address account) internal {
         if (!_transactionExist(self, txInput.outpoint)) {
             revert TransactionNotExist();
         }
@@ -180,9 +160,8 @@ library ExtendedUnspentTransactionOutput {
         }
 
         if (
-            keccak256(abi.encodePacked(txInput.outpoint))
-                .toEthSignedMessageHash()
-                .recover(txInput.signature) == address(0)
+            keccak256(abi.encodePacked(txInput.outpoint)).toEthSignedMessageHash().recover(txInput.signature) ==
+            address(0)
         ) {
             revert TransactionUnauthorized();
         }
@@ -198,11 +177,7 @@ library ExtendedUnspentTransactionOutput {
      * @param id The identifier of the transaction to consume.
      * @param account The account consuming the transaction.
      */
-    function consumeTransaction(
-        eUTXO storage self,
-        bytes32 id,
-        address account
-    ) internal {
+    function consumeTransaction(eUTXO storage self, bytes32 id, address account) internal {
         if (!_transactionExist(self, id)) {
             revert TransactionNotExist();
         }
@@ -218,10 +193,7 @@ library ExtendedUnspentTransactionOutput {
      * @param id The identifier of the transaction.
      * @return The transaction details.
      */
-    function transaction(
-        eUTXO storage self,
-        bytes32 id
-    ) internal view returns (Transaction memory) {
+    function transaction(eUTXO storage self, bytes32 id) internal view returns (Transaction memory) {
         return self.transactions[id];
     }
 
@@ -231,10 +203,7 @@ library ExtendedUnspentTransactionOutput {
      * @param id The identifier of the transaction.
      * @return The transaction value.
      */
-    function transactionValue(
-        eUTXO storage self,
-        bytes32 id
-    ) internal view returns (uint256) {
+    function transactionValue(eUTXO storage self, bytes32 id) internal view returns (uint256) {
         return self.transactions[id].value;
     }
 
@@ -244,10 +213,7 @@ library ExtendedUnspentTransactionOutput {
      * @param id The identifier of the transaction.
      * @return The transaction input identifier.
      */
-    function transactionInput(
-        eUTXO storage self,
-        bytes32 id
-    ) internal view returns (bytes32) {
+    function transactionInput(eUTXO storage self, bytes32 id) internal view returns (bytes32) {
         return self.transactions[id].input;
     }
 
@@ -257,10 +223,7 @@ library ExtendedUnspentTransactionOutput {
      * @param id The identifier of the transaction.
      * @return The transaction extra data.
      */
-    function transactionExtraData(
-        eUTXO storage self,
-        bytes32 id
-    ) internal view returns (bytes32) {
+    function transactionExtraData(eUTXO storage self, bytes32 id) internal view returns (bytes32) {
         return self.transactions[id].extraData;
     }
 
@@ -270,10 +233,7 @@ library ExtendedUnspentTransactionOutput {
      * @param id The identifier of the transaction.
      * @return true if the transaction has been spent, false otherwise.
      */
-    function transactionSpent(
-        eUTXO storage self,
-        bytes32 id
-    ) internal view returns (bool) {
+    function transactionSpent(eUTXO storage self, bytes32 id) internal view returns (bool) {
         return self.transactions[id].spent;
     }
 
@@ -283,10 +243,7 @@ library ExtendedUnspentTransactionOutput {
      * @param id The identifier of the transaction.
      * @return The owner address of the transaction.
      */
-    function transactionOwner(
-        eUTXO storage self,
-        bytes32 id
-    ) internal view returns (address) {
+    function transactionOwner(eUTXO storage self, bytes32 id) internal view returns (address) {
         return self.transactions[id].owner;
     }
 
@@ -296,10 +253,7 @@ library ExtendedUnspentTransactionOutput {
      * @param account The account address.
      * @return The count of transactions.
      */
-    function transactionCount(
-        eUTXO storage self,
-        address account
-    ) internal view returns (uint256) {
+    function transactionCount(eUTXO storage self, address account) internal view returns (uint256) {
         return self.nonces[account];
     }
 
@@ -309,10 +263,7 @@ library ExtendedUnspentTransactionOutput {
      * @param account The account address.
      * @return The size of transactions.
      */
-    function size(
-        eUTXO storage self,
-        address account
-    ) internal view returns (uint256) {
+    function transactionSize(eUTXO storage self, address account) internal view returns (uint256) {
         return self.size[account];
     }
 }

@@ -12,19 +12,19 @@ module.exports = {
         runs: 200,
       },
       viaIR: true,
-    }
+    },
   },
   networks: {
     hardhat: {
-      minGasPrice: 0,
       gasPrice: 0,
+      initialBaseFeePerGas: 0,
       blockGasLimit: 100_000_000,
       mining: {
         mempool: {
-          order: "fifo"
-        }
-      }
-    }
+          order: "fifo",
+        },
+      },
+    },
   },
   gasReporter: {
     enabled: true,
